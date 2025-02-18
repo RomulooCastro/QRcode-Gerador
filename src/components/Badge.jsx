@@ -20,24 +20,24 @@ function Badge({ badgeData, onDeleteBadge }) {
   return (
     <div
       id={id} // Atribui um id único para cada crachá
-      className="badge-container"
+      className="badge-container card p-3 mb-3 shadow-sm"
     >
-      <h2 className="badge-title">{firstName} {lastName}</h2>
-      <p>Email: {email}</p>
-      <p>Cargo: {position}</p>
-      <p>Setor: {department}</p>
+      <h2 className="badge-title text-center">{firstName} {lastName}</h2>
+      <p><strong>Email:</strong> {email}</p>
+      <p><strong>Cargo:</strong> {position}</p>
+      <p><strong>Setor:</strong> {department}</p>
 
-      <div className="qr-code-container">
+      <div className="qr-code-container mb-3">
         <QRCodeCanvas value={JSON.stringify({ firstName, lastName, email, position, department })} />
       </div>
 
-      <button onClick={handleDelete} className="delete-btn">Excluir</button>
-      <Link to={`/badges/edit/${id}`}>
-        <button className="edit-btn">Editar</button>
-      </Link>
-
-      {/* Botão para imprimir */}
-      <button onClick={handlePrint} className="print-btn">Imprimir Crachá</button>
+      <div className="d-flex justify-content-between">
+        <button onClick={handleDelete} className="btn btn-danger">Excluir</button>
+        <Link to={`/badges/edit/${id}`}>
+          <button className="btn btn-warning">Editar</button>
+        </Link>
+        <button onClick={handlePrint} className="btn btn-primary">Imprimir Crachá</button>
+      </div>
     </div>
   );
 }

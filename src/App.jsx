@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import BadgeForm from './components/BadgeForm';
 import Badge from './components/Badge';
 import BadgeEditForm from './components/BadgeEditForm';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   const [badgeData, setBadgeData] = useState([]);
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(false); // Estado para alternar entre tema claro e escuro
 
   useEffect(() => {
     const fetchBadges = async () => {
@@ -35,48 +35,52 @@ function App() {
     setBadgeData([...badgeData, newBadge]);  
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode); // Alterna entre os modos
-  };
-
   return (
     <Router>
-      <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
-        <nav className="navbar">
-          <ul className="navbar-list">
-            <li className="navbar-item">
-              <Link to="/" className="navbar-link">Home</Link>
-            </li>
-            <li className="navbar-item">
-              <Link to="/badges" className="navbar-link">Crachás</Link>
-            </li>
-          </ul>
+      <div className="App">
+        {/* Navbar */}
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="container-fluid">
+            <Link to="/" className="navbar-brand">Gerador de Crachás</Link>
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/" className="nav-link">Home</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/badges" className="nav-link">Crachás</Link>
+              </li>
+            </ul>
+          </div>
         </nav>
 
-        <button onClick={toggleDarkMode} className="theme-toggle-btn">
-        <i className="fas fa-sun sun-icon"></i>
-        <i className="fas fa-moon moon-icon"></i>
-        </button>
-
-
-
+        {/* Routes */}
         <Routes>
+          {/* Home Route */}
           <Route 
             path="/" 
             element={
-              <div>
-                <h1 className="home-title">Gerador de Crachás</h1>
+              <div className="container mt-4">
+                <h1 className="text-center">Gerador de Crachás</h1>
                 <BadgeForm onCreateBadge={handleCreateBadge} />
               </div>
             } 
           />
+          {/* Badges List Route */}
           <Route 
             path="/badges" 
             element={
-              <div className="badge-list-container">
-                <h2 className="badge-list-title">Lista de Crachás</h2>
-                {loading ? <p className="loading">Carregando...</p> : error ? <p className="error">{error}</p> : (
-                  <div className="badge-list">
+              <div className="container mt-4">
+                <h2 className="text-center">Lista de Crachás</h2>
+                {loading ? (
+                  <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                      <span className="visually-hidden">Carregando...</span>
+                    </div>
+                  </div>
+                ) : error ? (
+                  <p className="text-danger text-center">{error}</p>
+                ) : (
+                  <div className="list-group">
                     {badgeData.map(badge => (
                       <Badge key={badge.id} badgeData={badge} onDeleteBadge={handleDeleteBadge} />
                     ))}
@@ -85,6 +89,7 @@ function App() {
               </div>
             } 
           />
+          {/* Edit Badge Route */}
           <Route 
             path="/badges/edit/:id" 
             element={<BadgeEditForm onEditBadge={setBadgeData} />} 
